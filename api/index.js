@@ -23,15 +23,36 @@ app.get('/test', (req, res) => {
     res.json('test ok');
 });
 
+
 app.post("/register", async (req,res) => {
     const {name, email, password} = req.body;
     // create a user object to store the user information in the db
-    const userDoc = await User.create({
-        name,
-        email,
-        password: bcrypt.hashSync(password, bCryptSalt),
-    })
-    res.json(userDoc);
+
+    try{
+        const userDoc = await User.create({
+            name,
+            email,
+            password: bcrypt.hashSync(password, bCryptSalt),
+        })
+
+        res.json(userDoc);
+
+    } catch(e){
+        res.status(422).json(e);
+    }
+    
+});
+
+
+app.post("/login", async (req,res) => {
+    const {email, password} = req.body;
+    const userDoc = await User.findOne({email});
+    if(userDoc){
+        res.json("found")
+    } else {
+        res.json("not found")
+    }
+
 });
 
 app.listen(4000); //starts the server and listens for requests on port 4000
