@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose'); //for connecting to MongoDB
 const User = require('./models/User.js');
-cont jwt = require('jsonwebtoken'); // for creating cookies 
+const jwt = require('jsonwebtoken'); // for creating cookies 
 const bcrypt = require('bcryptjs'); //for encrypting passwords before sending to the db
 
 const bCryptSalt = bcrypt.genSaltSync(8);
