@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose'); //for connecting to MongoDB
 const User = require('./models/User.js');
+cont jwt = require('jsonwebtoken'); // for creating cookies 
 const bcrypt = require('bcryptjs'); //for encrypting passwords before sending to the db
 
 const bCryptSalt = bcrypt.genSaltSync(8);
@@ -48,7 +49,13 @@ app.post("/login", async (req,res) => {
     const {email, password} = req.body;
     const userDoc = await User.findOne({email});
     if(userDoc){
-        res.json("found")
+        const passOk = bcrypt.compareSync(password, userDoc.password);
+        if(passOk){
+            jwt.sign({email:userDoc.email, id:userDoc._id});
+            res.cookie('token', '').json("pass ok");
+        } else {
+            res.status(422).json("wrong pass")
+        }
     } else {
         res.json("not found")
     }
